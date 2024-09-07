@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Dashboard from "./front-end/dashboard";
 
 export default function Home() {

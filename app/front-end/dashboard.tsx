@@ -5,6 +5,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Tooltip, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
 } from 'recharts';
 import dynamic from 'next/dynamic';
+import { ApexOptions } from 'apexcharts';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -52,7 +53,6 @@ export default function Dashboard() {
         ]);
 
         // Log the API responses
-        console.log('data');
         console.log('Candlestick Data:', candlestickRes.data);
         console.log('Line Chart Data:', lineRes.data);
         console.log('Bar Chart Data:', barRes.data);
@@ -66,7 +66,7 @@ export default function Dashboard() {
 
       } catch (err) {
         console.error('API Fetch Error:', err);
-        setError('Failed to load data');
+        setError('Failed to load data. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -82,9 +82,9 @@ export default function Dashboard() {
     })),
   }];
 
-  const candlestickOptions = {
-    chart: { type: 'candlestick' },
-    xaxis: { type: 'datetime' },
+  const candlestickOptions: ApexOptions = {
+    chart: { type: 'candlestick' }, // Make sure the chart type is explicitly 'candlestick'
+    xaxis: { type: 'datetime' },    
     yaxis: { tooltip: { enabled: true } },
   };
 
@@ -103,19 +103,18 @@ export default function Dashboard() {
     value: pieChartData.data[index],
   }));
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>;
+  if (error) return <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>;
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-      <p style={{ fontSize: 'x-large', fontWeight: 'bold' }}>Dashboard</p>
+    <div style={{ padding: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        <p style={{ fontSize: 'x-large', fontWeight: 'bold' }}>Dashboard</p>
       </div>
-      <div style={{ fontSize: 'medium', fontWeight: 'bold' , display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
         {/* Line Chart */}
-        <div style={{ marginTop:"3rem",marginBottom: "3rem"}}>
+        <div style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Line Chart</h2>
-          <br></br>
           <ResponsiveContainer width={400} height={300}>
             <LineChart data={lineChartFormattedData}>
               <Line type="monotone" dataKey="value" stroke="#8884d8" />
@@ -128,9 +127,8 @@ export default function Dashboard() {
         </div>
 
         {/* Bar Chart */}
-        <div style={{ marginTop:"3rem",marginBottom: "3rem"}}>
+        <div style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Bar Chart</h2>
-          <br></br>
           <ResponsiveContainer width={400} height={300}>
             <BarChart data={barChartFormattedData}>
               <Bar dataKey="value" fill="#82ca9d" />
@@ -143,9 +141,8 @@ export default function Dashboard() {
         </div>
 
         {/* Pie Chart */}
-        <div>
+        <div style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Pie Chart</h2>
-          <br></br>
           <ResponsiveContainer width={400} height={300}>
             <PieChart>
               <Pie
@@ -164,9 +161,8 @@ export default function Dashboard() {
         </div>
 
         {/* Candlestick Chart */}
-        <div>
+        <div style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Candlestick Chart</h2>
-          <br></br>
           <ApexChart
             options={candlestickOptions}
             series={candlestickSeries}
@@ -177,7 +173,5 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-
-
   );
 }
